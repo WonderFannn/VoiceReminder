@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@drawable/ic_launcher" />
-
+        
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -36,6 +36,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="2"
+                
                 android:gravity="center"
                 android:text="全部分类"
                 android:textSize="15sp" />
@@ -66,18 +67,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <ListView
-            android:id="@+id/listView1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-        </ListView>
-
         <ImageView
             android:id="@+id/iv_add_new_reminder"
             android:layout_width="46dp"
             android:layout_height="46dp"
             android:layout_gravity="right|bottom"
             android:src="@android:drawable/ic_input_add" />
+
+        <ListView
+            android:id="@+id/listView1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+        </ListView>
+
     </FrameLayout>
 
 </LinearLayout>

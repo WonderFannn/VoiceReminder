@@ -1,4 +1,7 @@
-package com.sail.voicereminder;
+package com.sail.voicereminder.ui;
+
+import com.sail.voicereminder.R;
+import com.sail.voicereminder.adapter.MyRecordAdapter;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,19 +20,18 @@ import android.widget.TextView;
 public class MainVoiceReminderActivity extends Activity implements OnClickListener {
 
     private ImageView ivMenu;
-    private LinearLayout llClassifySelect;
     private TextView tvClassify;
     private ImageView ivSearch;
     private ImageView ivAddNewReminder;
-    private ListView listView1;
-
+    private ListView lvRecord;
+    private MyRecordAdapter myRecordAdapter;
+    
     private void findViews() {
         ivMenu = (ImageView)findViewById( R.id.iv_menu );
-        llClassifySelect = (LinearLayout)findViewById( R.id.ll_classify_select );
         tvClassify = (TextView)findViewById( R.id.tv_classify );
         ivSearch = (ImageView)findViewById( R.id.iv_search );
         ivAddNewReminder = (ImageView)findViewById( R.id.iv_add_new_reminder );
-        listView1 = (ListView)findViewById( R.id.listView1 );
+        lvRecord = (ListView)findViewById( R.id.listView1 );
     }
 
     @Override
@@ -39,9 +41,12 @@ public class MainVoiceReminderActivity extends Activity implements OnClickListen
         setContentView(R.layout.activity_main_voice_reminder);
         
         findViews();
-       
+        //设置按钮监听
         ivAddNewReminder.setOnClickListener(this);
         ivSearch.setOnClickListener(this);
+        //设置 listview 适配器
+        myRecordAdapter = new MyRecordAdapter(this);
+        lvRecord.setAdapter(myRecordAdapter);
     }
 
     @Override

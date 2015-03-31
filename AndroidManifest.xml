@@ -30,7 +30,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainVoiceReminderActivity"
+            android:name=".ui.MainVoiceReminderActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
         <activity 
-            android:name=".AddNewReminderActivity">
+            android:name=".ui.AddNewReminderActivity">
         </activity>>
     </application>
 

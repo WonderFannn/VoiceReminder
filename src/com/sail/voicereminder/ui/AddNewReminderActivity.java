@@ -1,4 +1,4 @@
-package com.sail.voicereminder;
+package com.sail.voicereminder.ui;
 
 import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.RecognizerListener;
@@ -9,6 +9,7 @@ import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.ui.RecognizerDialog;
 import com.iflytek.cloud.ui.RecognizerDialogListener;
+import com.sail.voicereminder.R;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -54,7 +55,7 @@ public class AddNewReminderActivity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_new_reminder);
+        setContentView(R.layout.activity_add_new_reminder);
         SpeechUtility.createUtility(getBaseContext(), SpeechConstant.APPID +"=5518ec36"); 
        
         RecognizerDialog  iatDialog = new RecognizerDialog(this,mInitListener);  

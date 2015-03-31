@@ -6,13 +6,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 
-public class MainVoiceReminderActivity extends Activity {
+public class MainVoiceReminderActivity extends Activity implements OnClickListener {
 
     private ImageView ivMenu;
     private LinearLayout llClassifySelect;
@@ -38,17 +40,16 @@ public class MainVoiceReminderActivity extends Activity {
         
         findViews();
        
-        ivAddNewReminder.setOnClickListener(new OnClickListener() {
-            
-            @Override
-            public void onClick(View v) {
+        ivAddNewReminder.setOnClickListener(this);
+        ivSearch.setOnClickListener(this);
+    }
 
-                Intent addIntent = new Intent(this,AddNewReminderActivity.class);
-                startActivity(addIntent);
-                
-            }
-        });
-        
+    @Override
+    public void onClick(View v) {
+        if(v == ivAddNewReminder){
+            Intent addIntent = new Intent(MainVoiceReminderActivity.this, AddNewReminderActivity.class);
+            startActivity(addIntent);
+        }
     }
 
 }

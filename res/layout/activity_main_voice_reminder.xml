@@ -67,6 +67,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
+        <ListView 
+            android:id="@+id/listView1" 
+            android:layout_width="match_parent" 
+            android:layout_height="match_parent" 
+            android:drawSelectorOnTop="true">
+
+        </ListView>
+        
         <ImageView
             android:id="@+id/iv_add_new_reminder"
             android:layout_width="46dp"
@@ -74,11 +82,7 @@
             android:layout_gravity="right|bottom"
             android:src="@android:drawable/ic_input_add" />
 
-        <ListView
-            android:id="@+id/listView1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-        </ListView>
+        
 
     </FrameLayout>
 

@@ -47,21 +47,23 @@ public class MyRecordAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        if (convertView != null) {
-            view = convertView;
-        }else {
-            view = inflater.inflate(R.layout.cell_record, null);
-            tvId = (TextView) view.findViewById(R.id.textViewNumber);
-            tvTitle = (TextView) view.findViewById(R.id.textViewTitle);
-            tvContent = (TextView) view.findViewById(R.id.textViewContent);
-        }
-        
-        tvId.setText(""+records.get(position).getId());
-        tvTitle.setText(records.get(position).getTitle());
-        tvContent.setText(records.get(position).getContent());
-            
         if(records.size() == 0){
             view = inflater.inflate(R.layout.cell_record_empty, null);
+        }else {
+            
+            if (convertView != null) {
+                view = convertView;
+            }else {
+                view = inflater.inflate(R.layout.cell_record, null);
+                tvId = (TextView) view.findViewById(R.id.textViewNumber);
+                tvTitle = (TextView) view.findViewById(R.id.textViewTitle);
+                tvContent = (TextView) view.findViewById(R.id.textViewContent);
+                
+                tvId.setText(""+records.get(position).getId());
+                tvTitle.setText(records.get(position).getTitle());
+                tvContent.setText(records.get(position).getContent());
+                
+            }
         }
     
         return view;

@@ -7,6 +7,7 @@ import com.sail.voicereminder.R;
 import com.sail.voicereminder.db.MyDBOperate;
 import com.sail.voicereminder.db.VoiceRemindRecord;
 
+import android.R.integer;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,6 +69,7 @@ public class MyRecordAdapter extends BaseAdapter {
     
         return view;
     }
-
-
+    public VoiceRemindRecord getRecord(int position) {
+        return records.get(position);
+    }
 }

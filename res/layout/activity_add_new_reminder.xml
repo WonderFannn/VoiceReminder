@@ -3,21 +3,141 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="5dp"
+    android:paddingBottom="5dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingTop="5dp" >
 
-    <EditText
-        android:id="@+id/editText1"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10" >
+        android:layout_height="0dp"
+        android:layout_weight="1" >
 
-        <requestFocus />
-    </EditText>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="Title" />
 
-    <ImageButton
-        android:id="@+id/imageButton1"
-        android:layout_width="156dp"
-        android:layout_height="149dp"
-        android:src="@drawable/reminder" />
+        <EditText
+            android:id="@+id/editTextAddTitle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:ems="10"
+            android:hint="录音完成后自动添加标题" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewContent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dip"
+        android:layout_weight="6"
+        android:background="@drawable/setbar_bg"
+        android:paddingBottom="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp"
+        android:text="T测试用的数据木,今天\型一起 就飞快的撒酒疯就上课了就桑德菲杰渴死了扩散到发货圣诞节开发后视镜法华寺uhksfh 咖啡机" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp" >
+
+            <ImageView
+                android:id="@+id/imageViewAddRecord"
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:layout_weight="1"
+                android:src="@drawable/image_record" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:id="@+id/textViewTimeMin"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:text="00" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=":" />
+
+                <TextView
+                    android:id="@+id/textViewTimeSec"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:text="00" />
+
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/ProgressBarAddRate"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="4"
+                android:max="30"
+                android:progress="10" />
+
+            <ImageView
+                android:id="@+id/imageViewAddStop"
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:layout_weight="1"
+                android:src="@drawable/image_stop" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+
+            <Button
+                android:id="@+id/buttonAddReturn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="返回" />
+
+            <Button
+                android:id="@+id/buttonAddSave"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="保存" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -1,6 +1,9 @@
 package com.sail.voicereminder.db;
 
-public class VoiceRemindRecord {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class VoiceRemindRecord implements Parcelable{
     private int _id;
     private String title;
     private String time;
@@ -48,6 +51,16 @@ public class VoiceRemindRecord {
     }
     public String getContent() {
         return content;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        
     }
 
     

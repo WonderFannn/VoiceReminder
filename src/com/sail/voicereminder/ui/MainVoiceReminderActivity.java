@@ -2,6 +2,7 @@ package com.sail.voicereminder.ui;
 
 import com.sail.voicereminder.R;
 import com.sail.voicereminder.adapter.MyRecordAdapter;
+import com.sail.voicereminder.db.VoiceRemindRecord;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,15 +10,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 
-public class MainVoiceReminderActivity extends Activity implements OnClickListener {
+public class MainVoiceReminderActivity extends Activity implements OnClickListener, OnItemClickListener {
 
     private ImageView ivMenu;
     private TextView tvClassify;
@@ -47,6 +47,8 @@ public class MainVoiceReminderActivity extends Activity implements OnClickListen
         //设置 listview 适配器
         myRecordAdapter = new MyRecordAdapter(this);
         lvRecord.setAdapter(myRecordAdapter);
+        //设置 item 监听
+        lvRecord.setOnItemClickListener(this);
     }
 
     @Override
@@ -55,6 +57,16 @@ public class MainVoiceReminderActivity extends Activity implements OnClickListen
             Intent addIntent = new Intent(MainVoiceReminderActivity.this, AddNewReminderActivity.class);
             startActivity(addIntent);
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        VoiceRemindRecord vrr = myRecordAdapter.getRecord(position);
+        Intent modIntent = new Intent(MainVoiceReminderActivity.this, ModifyReminfActivity.class);
+        Bundle mBundle = new Bundle();
+        mBundle.putParcelable("record", vrr);
+        modIntent.putExtras(mBundle);
+        startActivity(modIntent);
     }
 
 }

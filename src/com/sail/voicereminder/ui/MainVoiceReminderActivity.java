@@ -62,7 +62,7 @@ public class MainVoiceReminderActivity extends Activity implements OnClickListen
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         VoiceRemindRecord vrr = myRecordAdapter.getRecord(position);
-        Intent modIntent = new Intent(MainVoiceReminderActivity.this, ModifyReminfActivity.class);
+        Intent modIntent = new Intent(MainVoiceReminderActivity.this, ModifyReminderActivity.class);
         Bundle mBundle = new Bundle();
         mBundle.putParcelable("record", vrr);
         modIntent.putExtras(mBundle);

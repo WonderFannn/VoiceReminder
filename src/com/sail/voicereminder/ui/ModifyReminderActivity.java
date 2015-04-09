@@ -4,18 +4,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import com.sail.voicereminder.R;
-import com.sail.voicereminder.audio.AudioParam;
-import com.sail.voicereminder.audio.AudioPlayer;
-import com.sail.voicereminder.db.VoiceRemindRecord;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.AudioFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -24,7 +25,13 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class ModifyReminderActivity extends Activity implements OnClickListener {
+import com.sail.voicereminder.R;
+import com.sail.voicereminder.audio.AudioParam;
+import com.sail.voicereminder.audio.AudioPlayer;
+import com.sail.voicereminder.db.MyDBOperate;
+import com.sail.voicereminder.db.VoiceRemindRecord;
+
+public class ModifyReminderActivity<MainActivity> extends Activity implements OnClickListener {
     VoiceRemindRecord record;
     
     private EditText editTextModifyTitle;
@@ -42,6 +49,14 @@ public class ModifyReminderActivity extends Activity implements OnClickListener 
     private AudioPlayer audioPlayer;
     private boolean isPlaying = false;
     private Handler handler;
+    private Timer timer;
+    private int playTime = 0;
+    private int recordMaxTime;
+    final int TIMER_SECOND = 6130;
+    
+    // 数据库相关
+    private MyDBOperate myDBOperate;
+    
 
     private void findAndInitViews() {
         editTextModifyTitle = (EditText)findViewById( R.id.editTextModifyTitle );
@@ -57,7 +72,9 @@ public class ModifyReminderActivity extends Activity implements OnClickListener 
         
         editTextModifyTitle.setText(record.getTitle());
         editTextModifyContent.setText(record.getContent());
-        setTimeView(Integer.valueOf(record.getTime()).intValue());
+        recordMaxTime = Integer.valueOf(record.getTime()).intValue();
+        setTimeView(recordMaxTime);
+        progressBarModifyProgress.setMax(recordMaxTime);
         imageViewModifyPlay.setOnClickListener( this );
         imageViewModifyStop.setOnClickListener( this );
         buttonModifyReturn.setOnClickListener( this );
@@ -77,61 +94,132 @@ public class ModifyReminderActivity extends Activity implements OnClickListener 
     @Override
     public void onClick(View v) {
         if ( v == buttonModifyReturn ) {
-            
+            Intent mainIntent = new Intent(ModifyReminderActivity.this,MainVoiceReminderActivity.class);
+            startActivity(mainIntent);
+            finish();
         } else if ( v == buttonModifyDelete ) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(ModifyReminderActivity.this);  
+            alertDialog.setTitle("删除确认").setIcon(R.drawable.ic_launcher).setMessage("确定要删除该条记录?");
+            alertDialog.setPositiveButton("确定",  new android.content.DialogInterface.OnClickListener() {
+                
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    myDBOperate.delete(record.getId());
+                    File f = new File(record.getFile());
+                    if (f.exists()) {
+                        f.delete();
+                    }
+                    Intent mainIntent = new Intent(ModifyReminderActivity.this,MainVoiceReminderActivity.class);
+                    startActivity(mainIntent);
+                    finish();
+                }
+            }).setNegativeButton("取消",  new android.content.DialogInterface.OnClickListener() {
+                
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                   
+                }
+            });
+            AlertDialog dialog = alertDialog.create();  
+            dialog.show();  
+            
             
         } else if ( v == buttonModifySave ) {
-            
+            record.setTitle(editTextModifyTitle.getText().toString());
+            record.setContent(editTextModifyContent.getText().toString());
+            myDBOperate.updata(record);
+            buttonModifySave.setClickable(false);
         } else if ( v == imageViewModifyPlay ) {
-            audioPlayer.play();
+            if (!isPlaying) {
+                audioPlayer.play();
+                imageViewModifyPlay.setImageResource(R.drawable.image_pause);
+                setTimerTaskStart();
+            } else {
+                audioPlayer.pause();
+                imageViewModifyPlay.setImageResource(R.drawable.image_play);
+                setTimerTaskStop();
+            }
         } else if ( v == imageViewModifyStop) {
             audioPlayer.stop();
+            setTimerTaskStop();
         }
         
     }
-    public void initLogic()
-    {
-            handler = new Handler()
-            {
+    
+    // 关闭定时器
+    private void setTimerTaskStop() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+    // 定时器开始函数,每秒发一次消息
+    private void setTimerTaskStart(){
+        timer = new Timer();
+        timer.schedule(new TimerTask(){
+            @Override 
+            public void run(){
+                Message message = new Message();
+                message.what = TIMER_SECOND; 
+                handler.sendMessage(message);
+            } 
+        },0,1000);
+    }
 
-                        @Override
-                        public void handleMessage(Message msg) {
-                                switch(msg.what)
-                                {
-                                case AudioPlayer.STATE_MSG_ID:
-//                                        showState((Integer)msg.obj);
-                                        break;
-                                }
-                        }
-                    
-                    
-            };
-            
-            audioPlayer = new AudioPlayer(handler);
-            
-            // 获取音频参数
-            AudioParam audioParam = getAudioParam();
-            audioPlayer.setAudioParam(audioParam);
-            
-            // 获取音频数据
-            byte[] data = getPCMData();
-            audioPlayer.setDataSource(data);
-            
-            // 音频源就绪
-            audioPlayer.prepare();
-            
-            if (data == null) {
-                Log.v("音频相关","文件不存在");
+    public void initLogic() {
+        handler = new Handler() {
+
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+
+                case AudioPlayer.STATE_MSG_ID:
+                    // showState((Integer)msg.obj);
+                    break;
+                case TIMER_SECOND:
+                    if (playTime <= recordMaxTime) {
+                        playTime++;
+                        setTimeView(playTime);
+                        progressBarModifyProgress.setProgress(playTime);
+                    } else {
+                        audioPlayer.stop();
+                        setTimerTaskStop();
+                        imageViewModifyPlay.setImageResource(R.drawable.image_play);
+                        progressBarModifyProgress.setProgress(0);
+                    }
+                    break;
+
+                }
             }
+
+        };
+
+        audioPlayer = new AudioPlayer(handler);
+
+        // 获取音频参数
+        AudioParam audioParam = getAudioParam();
+        audioPlayer.setAudioParam(audioParam);
+
+        // 获取音频数据
+        byte[] data = getPCMData();
+        audioPlayer.setDataSource(data);
+
+        // 音频源就绪
+        audioPlayer.prepare();
+
+        if (data == null) {
+            Log.v("音频相关", "文件不存在");
+        }
     }
     /*
      * 获得PCM音频数据参数
      */
+        @SuppressWarnings("deprecation")
         public AudioParam getAudioParam()
         {
                 
             AudioParam audioParam = new AudioParam();
-            audioParam.setmFrequency(16000) ;
+            audioParam.setmFrequency(8000) ;
             audioParam.setmChannel(AudioFormat.CHANNEL_CONFIGURATION_STEREO); 
             audioParam.setmSampBit(AudioFormat.ENCODING_PCM_16BIT);
             
@@ -143,7 +231,7 @@ public class ModifyReminderActivity extends Activity implements OnClickListener 
     /*
      * 获得PCM音频数据
      */
-    @SuppressWarnings("resource")
+    @SuppressWarnings({ "resource", "unused" })
     public byte[] getPCMData(){
             
             String  filePath  = record.getFile();
@@ -183,8 +271,9 @@ public class ModifyReminderActivity extends Activity implements OnClickListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_reminder);
-
+        
         record = (VoiceRemindRecord) getIntent().getParcelableExtra("record");
+        myDBOperate = new MyDBOperate(getApplicationContext());
         findAndInitViews();
         initLogic();
         
@@ -194,5 +283,15 @@ public class ModifyReminderActivity extends Activity implements OnClickListener 
     protected void onDestroy() {
         super.onDestroy();
         audioPlayer.release();
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Intent mainIntent = new Intent(ModifyReminderActivity.this,MainVoiceReminderActivity.class);
+            startActivity(mainIntent);
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
+        
     }
 }

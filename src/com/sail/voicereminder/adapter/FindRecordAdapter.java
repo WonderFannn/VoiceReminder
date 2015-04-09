@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class MyRecordAdapter extends BaseAdapter {
+public class FindRecordAdapter extends BaseAdapter {
     private View view;
     private TextView tvId;
     private TextView tvTitle;
@@ -24,15 +24,15 @@ public class MyRecordAdapter extends BaseAdapter {
     private List<VoiceRemindRecord> records;
     private MyDBOperate myDBOperate;
     
-    public MyRecordAdapter(Context context)
+    public FindRecordAdapter(Context context, String condition)
     {
         this.context = context;
         myDBOperate = new MyDBOperate(context);
-        records = myDBOperate.findAll();
+        records = myDBOperate.findByKey(condition);
     }
     @Override
     public int getCount() {
-        return (1 > records.size() )? 1 : records.size();
+        return records.size();
     }
 
     @Override
@@ -48,24 +48,20 @@ public class MyRecordAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        if(records.size() == 0){
-            view = inflater.inflate(R.layout.cell_record_empty, null);
-        }else {
-            
-            if (convertView != null) {
-                view = convertView;
-            }else {
-                view = inflater.inflate(R.layout.cell_record, null);
-                tvId = (TextView) view.findViewById(R.id.textViewNumber);
-                tvTitle = (TextView) view.findViewById(R.id.textViewTitle);
-                tvContent = (TextView) view.findViewById(R.id.textViewContent);
-                
-                tvId.setText(""+records.get(position).getId());
-                tvTitle.setText(records.get(position).getTitle());
-                tvContent.setText(records.get(position).getContent());
-                
-            }
+
+        if (convertView != null) {
+            view = convertView;
+        } else {
+            view = inflater.inflate(R.layout.cell_record, null);
+            tvId = (TextView) view.findViewById(R.id.textViewNumber);
+            tvTitle = (TextView) view.findViewById(R.id.textViewTitle);
+            tvContent = (TextView) view.findViewById(R.id.textViewContent);
+
+
         }
+        tvId.setText("" + records.get(position).getId());
+        tvTitle.setText(records.get(position).getTitle());
+        tvContent.setText(records.get(position).getContent());
     
         return view;
     }

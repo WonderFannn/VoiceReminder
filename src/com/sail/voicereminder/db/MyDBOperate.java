@@ -74,6 +74,26 @@ public class MyDBOperate {
         }
         return records;
     }
+    public List<VoiceRemindRecord> findByKey(String condition ) {
+        List<VoiceRemindRecord> records = null;
+        SQLiteDatabase db = myDBHelper.getReadableDatabase();
+        Cursor cursor = db.query(MyDBHelper.RECORD_TABLE, null, MyDBHelper.CONTENT + " like '%"+condition+"%'"+" or "+ MyDBHelper.TITLE + " like '%"+condition+"%'"  , null, null, null, null);
+        if(cursor != null){
+            records = new ArrayList<VoiceRemindRecord>();
+            while(cursor.moveToNext()){
+                
+                int _id = cursor.getInt(cursor.getColumnIndex(MyDBHelper._ID));
+                String title = cursor.getString(cursor.getColumnIndex(MyDBHelper.TITLE));
+                String time = cursor.getString(cursor.getColumnIndex(MyDBHelper.TIME));
+                String file = cursor.getString(cursor.getColumnIndex(MyDBHelper.FILE));
+                String content = cursor.getString(cursor.getColumnIndex(MyDBHelper.CONTENT));
+                
+                VoiceRemindRecord record = new VoiceRemindRecord(_id, title, time, file, content);
+                records.add(record);
+            }
+        }
+        return records;
+    }
     /**
      * 查询指定id的数据
      */

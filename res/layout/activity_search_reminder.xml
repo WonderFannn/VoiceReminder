@@ -1,0 +1,66 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.sail.voicereminder.ui.MainVoiceReminderActivity" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#F5DEB3" >
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <EditText
+            android:id="@+id/et_searchKey"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4.50"
+            android:background="@drawable/setbar_bg"
+            android:ems="10" >
+
+            <requestFocus />
+        </EditText>
+
+        <ImageView
+            android:id="@+id/iv_voiceSearch"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:src="@drawable/image_microphone" />
+
+        <ImageView
+            android:id="@+id/iv_search"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_menu_search" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_prompt"
+        android:layout_width="match_parent"
+        android:layout_height="51dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="5dp"
+        android:text="可通过关键字查询和语音查询两种方式获得结果"
+        android:textSize="20sp" />
+
+    <ListView
+        android:id="@+id/listView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawSelectorOnTop="true" >
+    </ListView>
+
+</LinearLayout>

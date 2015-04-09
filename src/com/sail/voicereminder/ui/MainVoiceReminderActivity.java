@@ -56,6 +56,11 @@ public class MainVoiceReminderActivity extends Activity implements OnClickListen
         if(v == ivAddNewReminder){
             Intent addIntent = new Intent(MainVoiceReminderActivity.this, AddNewReminderActivity.class);
             startActivity(addIntent);
+            finish();
+        }else if (v == ivSearch) {
+            Intent addIntent = new Intent(MainVoiceReminderActivity.this, SearchReminderActivity.class);
+            startActivity(addIntent);
+            finish();
         }
     }
 
@@ -67,6 +72,7 @@ public class MainVoiceReminderActivity extends Activity implements OnClickListen
         mBundle.putParcelable("record", vrr);
         modIntent.putExtras(mBundle);
         startActivity(modIntent);
+        finish();
     }
 
 }

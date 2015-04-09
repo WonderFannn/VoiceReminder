@@ -25,6 +25,7 @@ import com.sail.voicereminder.db.VoiceRemindRecord;
 import com.sail.voicereminder.util.JsonParser;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -109,6 +111,8 @@ public class AddNewReminderActivity extends Activity implements OnClickListener{
                 }
                 fileName = "";
             }
+            Intent mainIntent = new Intent(AddNewReminderActivity.this,MainVoiceReminderActivity.class);
+            startActivity(mainIntent);
             finish();
         } else if ( v == buttonAddSave ) {
             
@@ -143,7 +147,7 @@ public class AddNewReminderActivity extends Activity implements OnClickListener{
                 imageViewAddRecord.setImageResource(R.drawable.image_stop);
                 setTimerTaskStart();
                 recording = true;
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");       
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");       
                 Date curDate = new Date(System.currentTimeMillis());//获取当前时间       
                 fileName = formatter.format(curDate);   
                 editTextAddTitle.setText(fileName);
@@ -320,5 +324,15 @@ public class AddNewReminderActivity extends Activity implements OnClickListener{
 
         editTextContent.setText(resultBuffer.toString());
         editTextContent.setSelection(editTextContent.length());
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Intent mainIntent = new Intent(AddNewReminderActivity.this,MainVoiceReminderActivity.class);
+            startActivity(mainIntent);
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
+        
     }
 }

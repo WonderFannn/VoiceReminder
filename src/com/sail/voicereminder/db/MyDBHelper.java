@@ -17,13 +17,15 @@ public class MyDBHelper extends SQLiteOpenHelper {
     public static final String TIME = "time";
     public static final String FILE = "file";
     public static final String CONTENT = "content";
+    public static final String CLASSIFY = "classify";
     
     private static final String CREATE_TABLE = "create table " + RECORD_TABLE + " ( " + 
             _ID + " Integer primary key autoincrement," + 
             TITLE + " text," +
             TIME + " text," +
             FILE + " text," +
-            CONTENT + " text" + ")";
+            CONTENT + " text," +
+            CLASSIFY + " text" + ")";
 
 
     public MyDBHelper(Context context, String name, CursorFactory factory, int version) {

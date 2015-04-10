@@ -12,15 +12,17 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 
-public class MainVoiceReminderActivity extends Activity implements OnClickListener, OnItemClickListener {
+public class MainVoiceReminderActivity extends Activity implements OnClickListener, OnItemClickListener, OnItemSelectedListener {
 
     private ImageView ivMenu;
-    private TextView tvClassify;
+    private Spinner spinnerClassify;
     private ImageView ivSearch;
     private ImageView ivAddNewReminder;
     private ListView lvRecord;
@@ -28,7 +30,7 @@ public class MainVoiceReminderActivity extends Activity implements OnClickListen
     
     private void findViews() {
         ivMenu = (ImageView)findViewById( R.id.iv_menu );
-        tvClassify = (TextView)findViewById( R.id.tv_classify );
+        spinnerClassify = (Spinner)findViewById( R.id.spinnerClassify );
         ivSearch = (ImageView)findViewById( R.id.iv_search );
         ivAddNewReminder = (ImageView)findViewById( R.id.iv_add_new_reminder );
         lvRecord = (ListView)findViewById( R.id.listView1 );
@@ -44,11 +46,9 @@ public class MainVoiceReminderActivity extends Activity implements OnClickListen
         //设置按钮监听
         ivAddNewReminder.setOnClickListener(this);
         ivSearch.setOnClickListener(this);
-        //设置 listview 适配器
-        myRecordAdapter = new MyRecordAdapter(this);
-        lvRecord.setAdapter(myRecordAdapter);
-        //设置 item 监听
-        lvRecord.setOnItemClickListener(this);
+        
+        spinnerClassify.setOnItemSelectedListener(this);
+
     }
 
     @Override
@@ -73,6 +73,21 @@ public class MainVoiceReminderActivity extends Activity implements OnClickListen
         modIntent.putExtras(mBundle);
         startActivity(modIntent);
         finish();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String classifyString = parent.getItemAtPosition(position).toString();
+        //设置 listview 适配器
+        myRecordAdapter = new MyRecordAdapter(this, classifyString);
+        lvRecord.setAdapter(myRecordAdapter);
+        //设置 item 监听
+        lvRecord.setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        
     }
 
 }

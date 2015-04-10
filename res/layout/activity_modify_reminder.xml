@@ -22,15 +22,21 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Title"
-            android:textSize="25sp" />
+            android:textSize="22sp" />
 
         <EditText
             android:id="@+id/editTextModifyTitle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
-            android:ems="10"
-            />
+            android:ems="10" />
+
+        <Spinner
+            android:id="@+id/spinnerClassify"
+            android:layout_width="0dp"            
+            android:entries="@array/classify"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5" />
 
     </LinearLayout>
 
@@ -97,7 +103,6 @@
                     android:layout_gravity="center"
                     android:layout_weight="2"
                     android:text="00" />
-
             </LinearLayout>
 
             <ProgressBar
@@ -116,13 +121,13 @@
                 android:layout_height="45dp"
                 android:layout_weight="1"
                 android:src="@drawable/image_play" />
+
             <ImageView
                 android:id="@+id/imageViewModifyStop"
                 android:layout_width="0dp"
                 android:layout_height="45dp"
                 android:layout_weight="1"
                 android:src="@drawable/image_stop" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -138,6 +143,13 @@
                 android:text="返回" />
 
             <Button
+                android:id="@+id/buttonModifySetting"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="设置" />
+
+            <Button
                 android:id="@+id/buttonModifyDelete"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -150,10 +162,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:clickable="false"
-                android:text="保存修改" />
-
+                android:text="保存" />
         </LinearLayout>
-
     </LinearLayout>
 
 </LinearLayout>

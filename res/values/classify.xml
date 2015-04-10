@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name = "classify">
+        <item >全部</item>
+        <item >日记</item>
+        <item >会议</item>
+        <item >工作</item>
+        <item >备忘</item>
+    </string-array>
+    
+</resources>

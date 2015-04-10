@@ -22,7 +22,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Title"
-            android:textSize="25sp" />
+            android:textSize="22sp" />
 
         <EditText
             android:id="@+id/editTextAddTitle"
@@ -31,6 +31,12 @@
             android:layout_weight="4"
             android:ems="10"
             android:hint="录音开始后自动添加标题" />
+        <Spinner
+            android:id="@+id/spinnerClassify"
+            android:layout_width="0dp"
+            android:entries="@array/classify"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5" />
 
     </LinearLayout>
 

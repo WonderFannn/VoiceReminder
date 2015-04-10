@@ -10,13 +10,15 @@ public class VoiceRemindRecord implements Parcelable{
     private String time;
     private String file;
     private String content;
+    private String classify;
     
-    public VoiceRemindRecord(int id,String titleString, String timeString , String fileString, String contentString){
+    public VoiceRemindRecord(int id,String titleString, String timeString , String fileString, String contentString,String classifyString){
         _id = id;
         title = titleString;
         time = timeString;
         file = fileString;
         content = contentString;
+        classify = classifyString; 
     }
     
     public void setId(int id) {
@@ -54,6 +56,12 @@ public class VoiceRemindRecord implements Parcelable{
         return content;
     }
 
+    public void setClassify(String classify) {
+        this.classify = classify;
+    }
+    public String getClassify() {
+        return classify;
+    }
     @Override
     public int describeContents() {
         return 0;
@@ -66,7 +74,7 @@ public class VoiceRemindRecord implements Parcelable{
           dest.writeString(time);
           dest.writeString(file);
           dest.writeString(content);
-          
+          dest.writeString(classify);
     }
 
     public static final Parcelable.Creator<VoiceRemindRecord> CREATOR = new Parcelable.Creator<VoiceRemindRecord>() {
@@ -88,6 +96,7 @@ public class VoiceRemindRecord implements Parcelable{
           time = source.readString();
           file = source.readString();
           content = source.readString();
+          classify = source.readString();
     }   
     
 }

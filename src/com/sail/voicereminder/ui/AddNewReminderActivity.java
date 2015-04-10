@@ -42,10 +42,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
-public class AddNewReminderActivity extends Activity implements OnClickListener{
-      
+public class AddNewReminderActivity extends Activity implements OnClickListener {
+
     // view相关
     private EditText editTextAddTitle;
     private EditText editTextContent;
@@ -55,14 +56,15 @@ public class AddNewReminderActivity extends Activity implements OnClickListener{
     private ProgressBar progressBarAddRate;
     private Button buttonAddReturn;
     private Button buttonAddSave;
+    private Spinner spinnerClassify;
     // 录音相关
     private boolean recording = false;
     private int Time = 0;
     private Handler mHandler;
     private Timer timer;
-    private SpeechRecognizer mIat;     // 语音听写对象
+    private SpeechRecognizer mIat; // 语音听写对象
     private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();// 用HashMap存储听写结果
-    private String fileName = "";   // 录音文件名
+    private String fileName = ""; // 录音文件名
 
     // 数据库相关
     private int addId;
@@ -70,8 +72,9 @@ public class AddNewReminderActivity extends Activity implements OnClickListener{
     private String addTime;
     private String addFile = "";
     private String addContent;
+    private String addClassify;
     private MyDBOperate myDBOperate;
-    
+
     private void findViews() {
         editTextAddTitle = (EditText)findViewById( R.id.editTextAddTitle );
         editTextContent = (EditText)findViewById( R.id.editTextContent );
@@ -81,7 +84,7 @@ public class AddNewReminderActivity extends Activity implements OnClickListener{
         progressBarAddRate = (ProgressBar)findViewById( R.id.ProgressBarAddRate );
         buttonAddReturn = (Button)findViewById( R.id.buttonAddReturn );
         buttonAddSave = (Button)findViewById( R.id.buttonAddSave );
-        
+        spinnerClassify = (Spinner) findViewById(R.id.spinnerClassify);
         editTextAddTitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -100,31 +103,35 @@ public class AddNewReminderActivity extends Activity implements OnClickListener{
         buttonAddSave.setClickable(false);
         
     }
-    int ret = 0; // 函数调用返回值 
+
+    int ret = 0; // 函数调用返回值
+
     @Override
     public void onClick(View v) {
-        if ( v == buttonAddReturn ) {
+        if (v == buttonAddReturn) {
             if (addFile == "" && fileName != "") {
-                File f = new File(Environment.getExternalStorageDirectory() + "/voiceReminder/" + fileName +".pcm");
+                File f = new File(Environment.getExternalStorageDirectory() + "/voiceReminder/" + fileName + ".pcm");
                 if (f.exists()) {
                     f.delete();
                 }
                 fileName = "";
             }
-            Intent mainIntent = new Intent(AddNewReminderActivity.this,MainVoiceReminderActivity.class);
+            Intent mainIntent = new Intent(AddNewReminderActivity.this, MainVoiceReminderActivity.class);
             startActivity(mainIntent);
             finish();
-        } else if ( v == buttonAddSave ) {
-            
+        } else if (v == buttonAddSave) {
+
             SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("maxId", MODE_PRIVATE);
             addId = sharedPreferences.getInt("maxid", 0);
-            addId ++;
+            addId++;
             addTitle = editTextAddTitle.getText().toString();
             addContent = editTextContent.getText().toString();
-            addTime = "" + Time ;
-            addFile = Environment.getExternalStorageDirectory() + "/voiceReminder/" + fileName +".pcm";
+            addTime = "" + Time;
+            addFile = Environment.getExternalStorageDirectory() + "/voiceReminder/" + fileName + ".pcm";
+            addClassify = spinnerClassify.getSelectedItem().toString();
+            Log.d("分类", "本次分类是:" + addClassify);
             myDBOperate = new MyDBOperate(getApplicationContext());
-            myDBOperate.add(new VoiceRemindRecord(addId, addTitle, addTime, addFile, addContent));
+            myDBOperate.add(new VoiceRemindRecord(addId, addTitle, addTime, addFile, addContent, addClassify));
             Editor editor = sharedPreferences.edit();
             editor.putInt("maxid", addId);
             editor.commit();
@@ -134,11 +141,11 @@ public class AddNewReminderActivity extends Activity implements OnClickListener{
             Time = 0;
             setTimeView(Time);
             buttonAddSave.setClickable(false);
-            
-        } else if ( v == imageViewAddRecord) {
+
+        } else if (v == imageViewAddRecord) {
             if (!recording) {
                 if (addFile == "" && fileName != "") {
-                    File f = new File(Environment.getExternalStorageDirectory() + "/voiceReminder/" + fileName +".pcm");
+                    File f = new File(Environment.getExternalStorageDirectory() + "/voiceReminder/" + fileName + ".pcm");
                     if (f.exists()) {
                         f.delete();
                     }
@@ -147,21 +154,21 @@ public class AddNewReminderActivity extends Activity implements OnClickListener{
                 imageViewAddRecord.setImageResource(R.drawable.image_stop);
                 setTimerTaskStart();
                 recording = true;
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");       
-                Date curDate = new Date(System.currentTimeMillis());//获取当前时间       
-                fileName = formatter.format(curDate);   
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");
+                Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
+                fileName = formatter.format(curDate);
                 editTextAddTitle.setText(fileName);
                 editTextContent.setText(null);
                 setParam();
                 ret = mIat.startListening(recognizerListener);
-            }else {
+            } else {
                 imageViewAddRecord.setImageResource(R.drawable.image_record);
                 setTimerTaskStop();
                 mIat.stopListening();
                 recording = false;
                 buttonAddSave.setClickable(true);
             }
-        } 
+        }
     }
 
     // 关闭定时器
@@ -171,24 +178,26 @@ public class AddNewReminderActivity extends Activity implements OnClickListener{
             timer = null;
         }
     }
+
     // 定时器开始函数,每秒发一次消息
-    private void setTimerTaskStart(){
+    private void setTimerTaskStart() {
         timer = new Timer();
-        timer.schedule(new TimerTask(){
-            @Override 
-            public void run(){
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
                 Message message = new Message();
-                message.what=1; 
+                message.what = 1;
                 mHandler.sendMessage(message);
-            } 
-        },0,1000);
+            }
+        }, 0, 1000);
     }
+
     private void setTimeView(int time) {
         int second = time % 60;
-        String secondString = second<10 ? "0"+second : "" +second;
+        String secondString = second < 10 ? "0" + second : "" + second;
         textViewTimeSec.setText(secondString);
-        int minute = time /60; 
-        String minuteString = minute<10 ? "0"+minute : "" +minute;
+        int minute = time / 60;
+        String minuteString = minute < 10 ? "0" + minute : "" + minute;
         textViewTimeMin.setText(minuteString);
     }
 
@@ -197,23 +206,23 @@ public class AddNewReminderActivity extends Activity implements OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_reminder);
         findViews();
-        mHandler = new Handler(){
+        mHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 Time++;
                 setTimeView(Time);
-                
+
             }
 
         };
-        
-        //初始化科大讯飞 sdk
-        SpeechUtility.createUtility(getBaseContext(), SpeechConstant.APPID +"=5518ec36"); 
+
+        // 初始化科大讯飞 sdk
+        SpeechUtility.createUtility(getBaseContext(), SpeechConstant.APPID + "=5518ec36");
         mIat = SpeechRecognizer.createRecognizer(this, mInitListener);
 
     }
-    
+
     /**
      * 初始化监听器。
      */
@@ -227,7 +236,7 @@ public class AddNewReminderActivity extends Activity implements OnClickListener{
             }
         }
     };
-    
+
     /**
      * 参数设置
      * 
@@ -237,13 +246,13 @@ public class AddNewReminderActivity extends Activity implements OnClickListener{
     public void setParam() {
         // 清空参数
         mIat.setParameter(SpeechConstant.PARAMS, null);
-        
+
         // 设置
         mIat.setParameter(SpeechConstant.DOMAIN, "iat");
         // 设置返回结果格式
         mIat.setParameter(SpeechConstant.RESULT_TYPE, "json");
         // 设置语言
-        mIat.setParameter(SpeechConstant.LANGUAGE, "zh_cn"); 
+        mIat.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
         // 设置语言区域
         mIat.setParameter(SpeechConstant.ACCENT, "mandarin ");
         // 设置录音最大时长
@@ -255,11 +264,13 @@ public class AddNewReminderActivity extends Activity implements OnClickListener{
         // 设置标点符号
         mIat.setParameter(SpeechConstant.ASR_PTT, "1");
         // 设置音频保存路径
-        mIat.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory() + "/voiceReminder/" + fileName +".pcm");
+        mIat.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory() + "/voiceReminder/"
+                + fileName + ".pcm");
         // 设置听写结果是否结果动态修正，为“1”则在听写过程中动态递增地返回结果，否则只在听写结束之后返回最终结果
         // 注：该参数暂时只对在线听写有效
-        mIat.setParameter(SpeechConstant.ASR_DWA,"0");
+        mIat.setParameter(SpeechConstant.ASR_DWA, "0");
     }
+
     /**
      * 听写监听器。
      */
@@ -267,7 +278,7 @@ public class AddNewReminderActivity extends Activity implements OnClickListener{
 
         @Override
         public void onBeginOfSpeech() {
-            
+
         }
 
         @Override
@@ -303,6 +314,7 @@ public class AddNewReminderActivity extends Activity implements OnClickListener{
             progressBarAddRate.setProgress(volume);
         }
     };
+
     // textview显示识别结果
     private void printResult(RecognizerResult results) {
         String text = JsonParser.parseIatResult(results.getResultString());
@@ -325,14 +337,15 @@ public class AddNewReminderActivity extends Activity implements OnClickListener{
         editTextContent.setText(resultBuffer.toString());
         editTextContent.setSelection(editTextContent.length());
     }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            Intent mainIntent = new Intent(AddNewReminderActivity.this,MainVoiceReminderActivity.class);
+            Intent mainIntent = new Intent(AddNewReminderActivity.this, MainVoiceReminderActivity.class);
             startActivity(mainIntent);
             finish();
         }
         return super.onKeyDown(keyCode, event);
-        
+
     }
 }

@@ -26,6 +26,7 @@ public class MyDBOperate {
         values.put(MyDBHelper.TIME, p.getTime());
         values.put(MyDBHelper.FILE, p.getFile());
         values.put(MyDBHelper.CONTENT, p.getContent());
+        values.put(MyDBHelper.CLASSIFY, p.getClassify());
         
         db.insert(MyDBHelper.RECORD_TABLE, null, values);
     }
@@ -48,7 +49,8 @@ public class MyDBOperate {
      values.put(MyDBHelper.TIME, p.getTime());
      values.put(MyDBHelper.FILE, p.getFile());
      values.put(MyDBHelper.CONTENT, p.getContent());
-     
+     values.put(MyDBHelper.CLASSIFY, p.getClassify());
+
      db.update(MyDBHelper.RECORD_TABLE, values, MyDBHelper._ID + "=?", new String[]{String.valueOf(p.getId())});
     }
     /**
@@ -67,8 +69,9 @@ public class MyDBOperate {
                 String time = cursor.getString(cursor.getColumnIndex(MyDBHelper.TIME));
                 String file = cursor.getString(cursor.getColumnIndex(MyDBHelper.FILE));
                 String content = cursor.getString(cursor.getColumnIndex(MyDBHelper.CONTENT));
+                String classify = cursor.getString(cursor.getColumnIndex(MyDBHelper.CLASSIFY));
                 
-                VoiceRemindRecord record = new VoiceRemindRecord(_id, title, time, file, content);
+                VoiceRemindRecord record = new VoiceRemindRecord(_id, title, time, file, content, classify);
                 records.add(record);
             }
         }
@@ -77,7 +80,13 @@ public class MyDBOperate {
     public List<VoiceRemindRecord> findByKey(String condition ) {
         List<VoiceRemindRecord> records = null;
         SQLiteDatabase db = myDBHelper.getReadableDatabase();
-        Cursor cursor = db.query(MyDBHelper.RECORD_TABLE, null, MyDBHelper.CONTENT + " like '%"+condition+"%'"+" or "+ MyDBHelper.TITLE + " like '%"+condition+"%'"  , null, null, null, null);
+        String sqlString = " like '%";
+        for (int i = 0; i < condition.length(); i++) {
+            sqlString += (condition.charAt(i) + "%"); 
+        }
+        sqlString += "'";
+        // 查询的时候按字查询,例如查询"中国人",会按" *中*国*人* "查询
+        Cursor cursor = db.query(MyDBHelper.RECORD_TABLE, null, MyDBHelper.CONTENT + sqlString+" or "+ MyDBHelper.TITLE + sqlString  , null, null, null, null);
         if(cursor != null){
             records = new ArrayList<VoiceRemindRecord>();
             while(cursor.moveToNext()){
@@ -87,8 +96,31 @@ public class MyDBOperate {
                 String time = cursor.getString(cursor.getColumnIndex(MyDBHelper.TIME));
                 String file = cursor.getString(cursor.getColumnIndex(MyDBHelper.FILE));
                 String content = cursor.getString(cursor.getColumnIndex(MyDBHelper.CONTENT));
+                String classify = cursor.getString(cursor.getColumnIndex(MyDBHelper.CLASSIFY));
                 
-                VoiceRemindRecord record = new VoiceRemindRecord(_id, title, time, file, content);
+                VoiceRemindRecord record = new VoiceRemindRecord(_id, title, time, file, content, classify);
+                records.add(record);
+            }
+        }
+        return records;
+    }
+    public List<VoiceRemindRecord> findByClassify(String classifyString) {
+        List<VoiceRemindRecord> records = null;
+        SQLiteDatabase db = myDBHelper.getReadableDatabase();
+        
+        Cursor cursor = db.query(MyDBHelper.RECORD_TABLE, null, MyDBHelper.CLASSIFY + "=?" , new String[]{classifyString}, null, null, null);
+        if(cursor != null){
+            records = new ArrayList<VoiceRemindRecord>();
+            while(cursor.moveToNext()){
+                
+                int _id = cursor.getInt(cursor.getColumnIndex(MyDBHelper._ID));
+                String title = cursor.getString(cursor.getColumnIndex(MyDBHelper.TITLE));
+                String time = cursor.getString(cursor.getColumnIndex(MyDBHelper.TIME));
+                String file = cursor.getString(cursor.getColumnIndex(MyDBHelper.FILE));
+                String content = cursor.getString(cursor.getColumnIndex(MyDBHelper.CONTENT));
+                String classify = cursor.getString(cursor.getColumnIndex(MyDBHelper.CLASSIFY));
+                
+                VoiceRemindRecord record = new VoiceRemindRecord(_id, title, time, file, content, classify);
                 records.add(record);
             }
         }
@@ -107,8 +139,9 @@ public class MyDBOperate {
             String time = cursor.getString(cursor.getColumnIndex(MyDBHelper.TIME));
             String file = cursor.getString(cursor.getColumnIndex(MyDBHelper.FILE));
             String content = cursor.getString(cursor.getColumnIndex(MyDBHelper.CONTENT));
-            
-            record = new VoiceRemindRecord(_id, title, time, file, content);
+            String classify = cursor.getString(cursor.getColumnIndex(MyDBHelper.CLASSIFY));
+
+            record = new VoiceRemindRecord(_id, title, time, file, content, classify);
         }
         return record;
     }

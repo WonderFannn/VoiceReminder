@@ -4,10 +4,13 @@ package com.sail.voicereminder.adapter;
 import java.util.List;
 
 import com.sail.voicereminder.R;
+import com.sail.voicereminder.db.MyDBHelper;
 import com.sail.voicereminder.db.MyDBOperate;
 import com.sail.voicereminder.db.VoiceRemindRecord;
 
 import android.content.Context;
+import android.support.annotation.StringDef;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +24,20 @@ public class MyRecordAdapter extends BaseAdapter {
     private TextView tvContent;
     
     private Context context;
+    private String classify;
     private List<VoiceRemindRecord> records;
     private MyDBOperate myDBOperate;
     
-    public MyRecordAdapter(Context context)
+    public MyRecordAdapter(Context context, String cString)
     {
         this.context = context;
+        this.classify = cString;
         myDBOperate = new MyDBOperate(context);
-        records = myDBOperate.findAll();
+        if (classify.equals("全部")) {
+            records = myDBOperate.findAll();
+        }else {
+            records = myDBOperate.findByClassify(classify);
+        }
     }
     @Override
     public int getCount() {

@@ -15,14 +15,18 @@ import android.media.AudioFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.OnHierarchyChangeListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.sail.voicereminder.R;
@@ -31,7 +35,7 @@ import com.sail.voicereminder.audio.AudioPlayer;
 import com.sail.voicereminder.db.MyDBOperate;
 import com.sail.voicereminder.db.VoiceRemindRecord;
 
-public class ModifyReminderActivity<MainActivity> extends Activity implements OnClickListener {
+public class ModifyReminderActivity<MainActivity> extends Activity implements OnClickListener, OnHierarchyChangeListener, TextWatcher {
     VoiceRemindRecord record;
     
     private EditText editTextModifyTitle;
@@ -44,6 +48,7 @@ public class ModifyReminderActivity<MainActivity> extends Activity implements On
     private Button buttonModifyReturn;
     private Button buttonModifyDelete;
     private Button buttonModifySave;
+    private Spinner spinnerClassify;
     
     // 音频播放相关
     private AudioPlayer audioPlayer;
@@ -69,9 +74,12 @@ public class ModifyReminderActivity<MainActivity> extends Activity implements On
         buttonModifyReturn = (Button)findViewById( R.id.buttonModifyReturn );
         buttonModifyDelete = (Button)findViewById( R.id.buttonModifyDelete );
         buttonModifySave = (Button)findViewById( R.id.buttonModifySave );
+        spinnerClassify = (Spinner) findViewById(R.id.spinnerClassify);
         
         editTextModifyTitle.setText(record.getTitle());
+        editTextModifyTitle.addTextChangedListener(this);
         editTextModifyContent.setText(record.getContent());
+        editTextModifyContent.addTextChangedListener(this);
         recordMaxTime = Integer.valueOf(record.getTime()).intValue();
         setTimeView(recordMaxTime);
         progressBarModifyProgress.setMax(recordMaxTime);
@@ -80,6 +88,8 @@ public class ModifyReminderActivity<MainActivity> extends Activity implements On
         buttonModifyReturn.setOnClickListener( this );
         buttonModifyDelete.setOnClickListener( this );
         buttonModifySave.setOnClickListener( this );
+        spinnerClassify.setOnHierarchyChangeListener(this);
+        buttonModifySave.setClickable( false );
     }
     
     private void setTimeView(int time) {
@@ -127,6 +137,7 @@ public class ModifyReminderActivity<MainActivity> extends Activity implements On
         } else if ( v == buttonModifySave ) {
             record.setTitle(editTextModifyTitle.getText().toString());
             record.setContent(editTextModifyContent.getText().toString());
+            record.setClassify(spinnerClassify.getSelectedItem().toString());
             myDBOperate.updata(record);
             buttonModifySave.setClickable(false);
         } else if ( v == imageViewModifyPlay ) {
@@ -293,5 +304,30 @@ public class ModifyReminderActivity<MainActivity> extends Activity implements On
         }
         return super.onKeyDown(keyCode, event);
         
+    }
+
+    @Override
+    public void onChildViewAdded(View parent, View child) {
+        buttonModifySave.setClickable(true);
+    }
+
+    @Override
+    public void onChildViewRemoved(View parent, View child) {
+        
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        buttonModifySave.setClickable(true);
     }
 }

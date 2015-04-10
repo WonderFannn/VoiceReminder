@@ -30,23 +30,19 @@
             android:layout_height="match_parent"
             android:layout_weight="2" >
 
-            <TextView
-                android:id="@+id/tv_classify"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="2"
-                
-                android:gravity="center"
-                android:text="全部分类"
-                android:textSize="15sp" />
+            <Spinner
+            android:id="@+id/spinnerClassify"
+            android:layout_width="0dp"            
+            android:entries="@array/classify"
+            android:layout_height="match_parent"
+            android:layout_weight="2" />
 
-            <ImageView
+      <!--       <ImageView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:src="@android:drawable/ic_menu_more" />
+                android:src="@android:drawable/ic_menu_more" /> -->
 
         </LinearLayout>
 

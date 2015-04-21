@@ -10,12 +10,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#F5DEB3" >
+        android:background="#55F5DEB3" >
 
         <ImageView
             android:id="@+id/iv_menu"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_weight="1"
             android:src="@drawable/ic_launcher" />
         
@@ -67,14 +67,15 @@
             android:id="@+id/listView1" 
             android:layout_width="match_parent" 
             android:layout_height="match_parent" 
+            android:background="#eeeeee"
             android:drawSelectorOnTop="true">
 
         </ListView>
         
         <ImageView
             android:id="@+id/iv_add_new_reminder"
-            android:layout_width="46dp"
-            android:layout_height="46dp"
+            android:layout_width="78dp"
+            android:layout_height="78dp"
             android:layout_gravity="right|bottom"
             android:src="@android:drawable/ic_input_add" />
 

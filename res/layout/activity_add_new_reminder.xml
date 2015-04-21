@@ -51,12 +51,13 @@
         android:layout_weight="6"
         android:background="@drawable/setbar_bg"
         android:gravity="left"
+        android:hint="语音识别显示的内容将会在这里显示。"
         android:paddingBottom="5dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:paddingTop="5dp"
-        android:text="T测试用的数据木,今天\型一起 就飞快的撒酒疯就上课了就桑德菲杰渴死了扩散到发货圣诞节开发后视镜法华寺uhksfh 咖啡机"
-        android:textSize="20sp" />
+        android:textColor="@android:color/holo_blue_light"
+        android:textSize="25sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -131,15 +132,26 @@
                 android:id="@+id/buttonAddReturn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="0dp"
                 android:layout_weight="1"
+                android:radius="5dip"
+                android:background="#00c0ff"
                 android:text="返回" />
 
             <Button
                 android:id="@+id/buttonAddSave"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="0dp"
                 android:layout_weight="1"
                 android:clickable="false"
+                android:background="#888888"
                 android:text="保存" />
 
         </LinearLayout>

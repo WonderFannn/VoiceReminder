@@ -7,6 +7,7 @@ import com.sail.voicereminder.R;
 import com.sail.voicereminder.db.MyDBHelper;
 import com.sail.voicereminder.db.MyDBOperate;
 import com.sail.voicereminder.db.VoiceRemindRecord;
+import com.sail.voicereminder.ui.randomcolor.RandomColor;
 
 import android.content.Context;
 import android.support.annotation.StringDef;
@@ -27,6 +28,8 @@ public class MyRecordAdapter extends BaseAdapter {
     private String classify;
     private List<VoiceRemindRecord> records;
     private MyDBOperate myDBOperate;
+    private RandomColor randomColor;
+    private int[] color;
     
     public MyRecordAdapter(Context context, String cString)
     {
@@ -38,6 +41,8 @@ public class MyRecordAdapter extends BaseAdapter {
         }else {
             records = myDBOperate.findByClassify(classify);
         }
+        randomColor = new RandomColor();
+        color = randomColor.randomColor((1 > records.size() )? 1 : records.size());
     }
     @Override
     public int getCount() {
@@ -72,7 +77,9 @@ public class MyRecordAdapter extends BaseAdapter {
                 tvId.setText(""+records.get(position).getId());
                 tvTitle.setText(records.get(position).getTitle());
                 tvContent.setText(records.get(position).getContent());
-                
+                tvId.setTextColor(color[position]);
+//                tvTitle.setTextColor(color[position]);
+//                tvContent.setTextColor(color[position]);
             }
         }
     

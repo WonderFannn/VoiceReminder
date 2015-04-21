@@ -24,6 +24,7 @@ import com.sail.voicereminder.db.MyDBOperate;
 import com.sail.voicereminder.db.VoiceRemindRecord;
 import com.sail.voicereminder.util.JsonParser;
 
+import android.R.color;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -101,6 +102,7 @@ public class AddNewReminderActivity extends Activity implements OnClickListener 
         buttonAddReturn.setOnClickListener( this );
         buttonAddSave.setOnClickListener( this );
         buttonAddSave.setClickable(false);
+        buttonAddSave.setBackgroundColor(0xff888888);
         
     }
 
@@ -124,6 +126,9 @@ public class AddNewReminderActivity extends Activity implements OnClickListener 
             SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("maxId", MODE_PRIVATE);
             addId = sharedPreferences.getInt("maxid", 0);
             addId++;
+            Editor editor = sharedPreferences.edit();
+            editor.putInt("maxid", addId);
+            editor.commit();
             addTitle = editTextAddTitle.getText().toString();
             addContent = editTextContent.getText().toString();
             addTime = "" + Time;
@@ -132,15 +137,13 @@ public class AddNewReminderActivity extends Activity implements OnClickListener 
             Log.d("分类", "本次分类是:" + addClassify);
             myDBOperate = new MyDBOperate(getApplicationContext());
             myDBOperate.add(new VoiceRemindRecord(addId, addTitle, addTime, addFile, addContent, addClassify));
-            Editor editor = sharedPreferences.edit();
-            editor.putInt("maxid", addId);
-            editor.commit();
             editTextAddTitle.setText(null);
             editTextContent.setText(null);
             addFile = "";
             Time = 0;
             setTimeView(Time);
             buttonAddSave.setClickable(false);
+            buttonAddSave.setBackgroundColor(0xff888888);
 
         } else if (v == imageViewAddRecord) {
             if (!recording) {
@@ -166,7 +169,9 @@ public class AddNewReminderActivity extends Activity implements OnClickListener 
                 setTimerTaskStop();
                 mIat.stopListening();
                 recording = false;
+                buttonAddSave.setBackgroundColor(0xffbbff00);
                 buttonAddSave.setClickable(true);
+                
             }
         }
     }

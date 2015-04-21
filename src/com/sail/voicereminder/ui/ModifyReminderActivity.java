@@ -4,11 +4,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioFormat;
@@ -28,14 +32,16 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.sail.voicereminder.R;
+import com.sail.voicereminder.alarm.MyAlarmReceiver;
 import com.sail.voicereminder.audio.AudioParam;
 import com.sail.voicereminder.audio.AudioPlayer;
 import com.sail.voicereminder.db.MyDBOperate;
 import com.sail.voicereminder.db.VoiceRemindRecord;
 
-public class ModifyReminderActivity<MainActivity> extends Activity implements OnClickListener, OnHierarchyChangeListener, TextWatcher {
+public class ModifyReminderActivity<MainActivity> extends Activity implements OnClickListener, TextWatcher {
     VoiceRemindRecord record;
     
     private EditText editTextModifyTitle;
@@ -49,6 +55,7 @@ public class ModifyReminderActivity<MainActivity> extends Activity implements On
     private Button buttonModifyDelete;
     private Button buttonModifySave;
     private Spinner spinnerClassify;
+    private Button buttonModifySetting;
     
     // 音频播放相关
     private AudioPlayer audioPlayer;
@@ -62,18 +69,22 @@ public class ModifyReminderActivity<MainActivity> extends Activity implements On
     // 数据库相关
     private MyDBOperate myDBOperate;
     
+    // 闹钟相关
+    private Calendar calender = null;  
+    
 
     private void findAndInitViews() {
-        editTextModifyTitle = (EditText)findViewById( R.id.editTextModifyTitle );
-        editTextModifyContent = (EditText)findViewById( R.id.editTextModifyContent );
-        textViewModifyTimeMin = (TextView)findViewById( R.id.textViewModifyTimeMin );
-        textViewModifyTimeSec = (TextView)findViewById( R.id.textViewModifyTimeSec );
-        progressBarModifyProgress = (ProgressBar)findViewById( R.id.progressBarModifyProgress );
-        imageViewModifyPlay = (ImageView)findViewById( R.id.imageViewModifyPlay );
-        imageViewModifyStop = (ImageView)findViewById( R.id.imageViewModifyStop );
-        buttonModifyReturn = (Button)findViewById( R.id.buttonModifyReturn );
-        buttonModifyDelete = (Button)findViewById( R.id.buttonModifyDelete );
-        buttonModifySave = (Button)findViewById( R.id.buttonModifySave );
+        editTextModifyTitle = (EditText) findViewById( R.id.editTextModifyTitle );
+        editTextModifyContent = (EditText) findViewById( R.id.editTextModifyContent );
+        textViewModifyTimeMin = (TextView) findViewById( R.id.textViewModifyTimeMin );
+        textViewModifyTimeSec = (TextView) findViewById( R.id.textViewModifyTimeSec );
+        progressBarModifyProgress = (ProgressBar) findViewById( R.id.progressBarModifyProgress );
+        imageViewModifyPlay = (ImageView) findViewById( R.id.imageViewModifyPlay );
+        imageViewModifyStop = (ImageView) findViewById( R.id.imageViewModifyStop );
+        buttonModifyReturn = (Button) findViewById( R.id.buttonModifyReturn );
+        buttonModifySetting = (Button) findViewById(R.id.buttonModifySetting);
+        buttonModifyDelete = (Button) findViewById( R.id.buttonModifyDelete );
+        buttonModifySave = (Button) findViewById( R.id.buttonModifySave );
         spinnerClassify = (Spinner) findViewById(R.id.spinnerClassify);
         
         editTextModifyTitle.setText(record.getTitle());
@@ -82,14 +93,26 @@ public class ModifyReminderActivity<MainActivity> extends Activity implements On
         editTextModifyContent.addTextChangedListener(this);
         recordMaxTime = Integer.valueOf(record.getTime()).intValue();
         setTimeView(recordMaxTime);
+        progressBarModifyProgress.setProgress(0);
         progressBarModifyProgress.setMax(recordMaxTime);
+        String[] classifyStrings = getResources().getStringArray(R.array.classify);
+        int classifyPosition;
+        for (classifyPosition = 0; classifyPosition < classifyStrings.length; classifyPosition++) {
+            if (record.getClassify().equals(classifyStrings[classifyPosition])) {
+                break;
+            }
+        }
+        spinnerClassify.setSelection(classifyPosition);
         imageViewModifyPlay.setOnClickListener( this );
         imageViewModifyStop.setOnClickListener( this );
         buttonModifyReturn.setOnClickListener( this );
+        buttonModifySetting.setOnClickListener( this );
         buttonModifyDelete.setOnClickListener( this );
         buttonModifySave.setOnClickListener( this );
-        spinnerClassify.setOnHierarchyChangeListener(this);
+        Log.d("点击设置","不可点击");
         buttonModifySave.setClickable( false );
+        calender = Calendar.getInstance();
+
     }
     
     private void setTimeView(int time) {
@@ -107,6 +130,30 @@ public class ModifyReminderActivity<MainActivity> extends Activity implements On
             Intent mainIntent = new Intent(ModifyReminderActivity.this,MainVoiceReminderActivity.class);
             startActivity(mainIntent);
             finish();
+        } else if (v == buttonModifySetting) {
+            calender.setTimeInMillis(System.currentTimeMillis());  
+            int hour = calender.get(Calendar.HOUR_OF_DAY);  
+            int minute = calender.get(Calendar.MINUTE);  
+            new TimePickerDialog(ModifyReminderActivity.this,new TimePickerDialog.OnTimeSetListener(){  
+                
+                @Override
+                public void onTimeSet(TimePicker view, int hourOfDay,  
+                        int minute) {  
+                    calender.setTimeInMillis(System.currentTimeMillis());  
+                    calender.set(Calendar.HOUR_OF_DAY, hourOfDay);  
+                    calender.set(Calendar.MINUTE, minute);  
+                    calender.set(Calendar.SECOND, 0);  
+                    calender.set(Calendar.MILLISECOND, 0);  
+                    Intent intent = new Intent(ModifyReminderActivity.this,MyAlarmReceiver.class);  
+                    PendingIntent pi = PendingIntent.getBroadcast(ModifyReminderActivity.this, 0, intent, 0);  
+                    AlarmManager am = (AlarmManager) getSystemService(Activity.ALARM_SERVICE);  
+                    am.set(AlarmManager.RTC_WAKEUP, calender.getTimeInMillis(), pi);//设置闹钟  
+//                    am.setRepeating(AlarmManager.RTC_WAKEUP, calender.getTimeInMillis(), (10*1000), pi);//重复设置  
+                }
+                  
+            },hour,minute,true).show();
+            
+            
         } else if ( v == buttonModifyDelete ) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(ModifyReminderActivity.this);  
             alertDialog.setTitle("删除确认").setIcon(R.drawable.ic_launcher).setMessage("确定要删除该条记录?");
@@ -140,6 +187,7 @@ public class ModifyReminderActivity<MainActivity> extends Activity implements On
             record.setClassify(spinnerClassify.getSelectedItem().toString());
             myDBOperate.updata(record);
             buttonModifySave.setClickable(false);
+            buttonModifySave.setBackgroundColor(0xff888888);
         } else if ( v == imageViewModifyPlay ) {
             if (!isPlaying) {
                 audioPlayer.play();
@@ -197,6 +245,8 @@ public class ModifyReminderActivity<MainActivity> extends Activity implements On
                         setTimerTaskStop();
                         imageViewModifyPlay.setImageResource(R.drawable.image_play);
                         progressBarModifyProgress.setProgress(0);
+                        isPlaying = false;
+                        playTime = 0;
                     }
                     break;
 
@@ -307,16 +357,6 @@ public class ModifyReminderActivity<MainActivity> extends Activity implements On
     }
 
     @Override
-    public void onChildViewAdded(View parent, View child) {
-        buttonModifySave.setClickable(true);
-    }
-
-    @Override
-    public void onChildViewRemoved(View parent, View child) {
-        
-    }
-
-    @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         
     }
@@ -328,6 +368,8 @@ public class ModifyReminderActivity<MainActivity> extends Activity implements On
 
     @Override
     public void afterTextChanged(Editable s) {
+        Log.d("textchange","文本改变执行");
         buttonModifySave.setClickable(true);
+        buttonModifySave.setBackgroundColor(0xffbbff00);
     }
 }

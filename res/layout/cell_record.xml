@@ -34,7 +34,7 @@
             android:layout_weight="2"
             android:text="content"
             android:textAlignment="textStart"
-            android:textSize="20sp" />
+            android:textSize="20sp"/>
 
     </LinearLayout>
 

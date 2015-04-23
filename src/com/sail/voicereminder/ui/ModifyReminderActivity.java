@@ -145,6 +145,9 @@ public class ModifyReminderActivity<MainActivity> extends Activity implements On
                     calender.set(Calendar.SECOND, 0);  
                     calender.set(Calendar.MILLISECOND, 0);  
                     Intent intent = new Intent(ModifyReminderActivity.this,MyAlarmReceiver.class);  
+                    Bundle mBundle = new Bundle();
+                    mBundle.putParcelable("record", record);
+                    intent.putExtras(mBundle);
                     PendingIntent pi = PendingIntent.getBroadcast(ModifyReminderActivity.this, 0, intent, 0);  
                     AlarmManager am = (AlarmManager) getSystemService(Activity.ALARM_SERVICE);  
                     am.set(AlarmManager.RTC_WAKEUP, calender.getTimeInMillis(), pi);//设置闹钟  

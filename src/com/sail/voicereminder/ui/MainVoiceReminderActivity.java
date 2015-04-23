@@ -62,7 +62,7 @@ public class MainVoiceReminderActivity extends Activity implements OnClickListen
             startActivity(addIntent);
             finish();
         }
-    }
+    } 
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

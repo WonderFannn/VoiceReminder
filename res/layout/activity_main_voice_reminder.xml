@@ -55,8 +55,11 @@
             android:id="@+id/iv_search"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_marginLeft="5dp"
             android:layout_weight="1"
-            android:src="@android:drawable/ic_menu_search" />
+            android:src="@drawable/image_search1" />
+
     </LinearLayout>
 
     <FrameLayout

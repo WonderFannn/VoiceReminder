@@ -4,12 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created by bruce on 15/2/5.
- */
 public class RandomColor {
-    private static final String TAG = "RandomColor";
-
     public static enum SaturationType {
         RANDOM, MONOCHROME
     }
@@ -154,6 +149,7 @@ public class RandomColor {
         return pickSaturation(colorInfo, saturationType, luminosity);
     }
 
+    @SuppressWarnings("incomplete-switch")
     private int pickSaturation(ColorInfo colorInfo, SaturationType saturationType, Luminosity luminosity) {
         if (saturationType != null) {
             switch (saturationType) {
@@ -202,6 +198,7 @@ public class RandomColor {
         return pickBrightness(colorInfo, saturation, luminosity);
     }
 
+    @SuppressWarnings("incomplete-switch")
     private int pickBrightness(ColorInfo colorInfo, int saturation, Luminosity luminosity) {
         int min = getMinimumBrightness(colorInfo, saturation),
             max = 100;

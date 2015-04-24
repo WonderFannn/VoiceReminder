@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Timer;
 
 import com.sail.voicereminder.R;
 import com.sail.voicereminder.audio.AudioParam;
@@ -20,7 +19,6 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -33,7 +31,6 @@ public class AlarmDialogActivity extends Activity implements OnClickListener {
     boolean isPlaying = false;
     private AudioPlayer audioPlayer;
     private Handler handler;
-    private Timer timer;
     private int playTime = 0;
     private int recordMaxTime;
     final int TIMER_SECOND = 6130;
@@ -62,7 +59,7 @@ public class AlarmDialogActivity extends Activity implements OnClickListener {
 
             if (!isPlaying) {
                 audioPlayer.play();
-                imageViewPlay.setImageResource(R.drawable.image_pause);
+                imageViewPlay.setImageResource(R.drawable.image_stop);
             } else {
                 audioPlayer.stop();
                 imageViewPlay.setImageResource(R.drawable.image_play);
@@ -78,6 +75,7 @@ public class AlarmDialogActivity extends Activity implements OnClickListener {
         record = (VoiceRemindRecord) getIntent().getParcelableExtra("record");
         initLogic();
         findViews();
+        recordMaxTime = Integer.valueOf(record.getTime()).intValue();
     }
     public void initLogic() {
         handler = new Handler() {

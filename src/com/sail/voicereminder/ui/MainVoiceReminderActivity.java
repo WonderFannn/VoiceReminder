@@ -16,12 +16,10 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 
 public class MainVoiceReminderActivity extends Activity implements OnClickListener, OnItemClickListener, OnItemSelectedListener {
 
-    private ImageView ivMenu;
     private Spinner spinnerClassify;
     private ImageView ivSearch;
     private ImageView ivAddNewReminder;
@@ -29,7 +27,6 @@ public class MainVoiceReminderActivity extends Activity implements OnClickListen
     private MyRecordAdapter myRecordAdapter;
     
     private void findViews() {
-        ivMenu = (ImageView)findViewById( R.id.iv_menu );
         spinnerClassify = (Spinner)findViewById( R.id.spinnerClassify );
         ivSearch = (ImageView)findViewById( R.id.iv_search );
         ivAddNewReminder = (ImageView)findViewById( R.id.iv_add_new_reminder );

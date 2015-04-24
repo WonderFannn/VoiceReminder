@@ -25,7 +25,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.OnHierarchyChangeListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -202,6 +201,7 @@ public class ModifyReminderActivity<MainActivity> extends Activity implements On
                 setTimerTaskStop();
             }
         } else if ( v == imageViewModifyStop) {
+            imageViewModifyPlay.setImageResource(R.drawable.image_play);
             audioPlayer.stop();
             setTimerTaskStop();
         }

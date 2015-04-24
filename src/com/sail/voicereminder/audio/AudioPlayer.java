@@ -181,10 +181,7 @@ public class AudioPlayer implements IPlayComplete{
     {
             
             // 获得构建对象的最小缓冲区大小                                         一般情况 minBufferSize  会导致播出吱吱声音。
-            int minBufSize = AudioTrack.getMinBufferSize(mAudioParam.mFrequency, 
-                                                                                                    mAudioParam.mChannel,
-                                                                                                    mAudioParam.mSampBit);
-            
+            int minBufSize = AudioTrack.getMinBufferSize(mAudioParam.mFrequency, mAudioParam.mChannel, mAudioParam.mSampBit);
             
             mPrimePlaySize = minBufSize * 2;
             Log.d(TAG, "mPrimePlaySize = " + mPrimePlaySize);
@@ -267,6 +264,7 @@ public class AudioPlayer implements IPlayComplete{
                                             break;
                                     }                                        
                                     try {
+                                            @SuppressWarnings("unused")
                                             int size = mAudioTrack.write(mData, mPlayOffset, mPrimePlaySize);
                                             mPlayOffset += mPrimePlaySize;
                                     } catch (Exception e) {

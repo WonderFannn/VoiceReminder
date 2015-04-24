@@ -24,7 +24,6 @@ import com.sail.voicereminder.db.MyDBOperate;
 import com.sail.voicereminder.db.VoiceRemindRecord;
 import com.sail.voicereminder.util.JsonParser;
 
-import android.R.color;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;

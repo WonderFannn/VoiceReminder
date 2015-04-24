@@ -4,14 +4,11 @@ package com.sail.voicereminder.adapter;
 import java.util.List;
 
 import com.sail.voicereminder.R;
-import com.sail.voicereminder.db.MyDBHelper;
 import com.sail.voicereminder.db.MyDBOperate;
 import com.sail.voicereminder.db.VoiceRemindRecord;
 import com.sail.voicereminder.ui.randomcolor.RandomColor;
 
 import android.content.Context;
-import android.support.annotation.StringDef;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

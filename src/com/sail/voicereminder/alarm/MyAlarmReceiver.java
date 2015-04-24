@@ -2,8 +2,6 @@ package com.sail.voicereminder.alarm;
 
 import com.sail.voicereminder.db.VoiceRemindRecord;
 import com.sail.voicereminder.ui.AlarmDialogActivity;
-import com.sail.voicereminder.ui.MainVoiceReminderActivity;
-import com.sail.voicereminder.ui.ModifyReminderActivity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
